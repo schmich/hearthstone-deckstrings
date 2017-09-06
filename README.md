@@ -1,6 +1,6 @@
 # deckstrings
 
-Ruby library for encoding and decoding Hearthstone deckstrings.
+Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/).
 
 ## Getting Started
 

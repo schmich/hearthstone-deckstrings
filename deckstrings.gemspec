@@ -1,8 +1,6 @@
-require File.expand_path('lib/deckstrings/version.rb', File.dirname(__FILE__))
-
 Gem::Specification.new do |s|
   s.name = 'deckstrings'
-  s.version = Deckstrings::VERSION
+  s.version = `git tag | tail -n1`.strip
   s.date = Time.now.strftime('%Y-%m-%d')
   s.summary = 'Encode and decode Hearthstone deckstrings.'
   s.description = 'Ruby library for encoding and decoding Hearthstone deckstrings.'

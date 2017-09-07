@@ -262,6 +262,11 @@ module Deckstrings
     # Cards.
     by_count = cards.group_by { |id, n| n > 2 ? 3 : n }
 
+    invalid = by_count.keys.select { |count| count < 1 }
+    unless invalid.empty?
+      raise ArgumentError.new("Invalid card count: #{invalid.join(', ')}.")
+    end
+
     1.upto(3) do |count|
       group = by_count[count] || []
       stream.write_varint(group.length)

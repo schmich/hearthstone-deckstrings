@@ -234,18 +234,6 @@ module Deckstrings
   using VarIntExtensions
 
   def self.encode(format:, heroes:, cards:)
-    if format.nil?
-      # TODO
-    end
-
-    if heroes.nil?
-      # TODO
-    end
-
-    if cards.nil?
-      # TODO
-    end
-
     stream = StringIO.new('')
 
     # Reserved slot, version, and format.
@@ -282,8 +270,8 @@ module Deckstrings
   def self.decode(deckstring)
     # TODO: Translate EOFError -> FormatError.
 
-    if !deckstring
-      # TODO
+    if deckstring.nil? || deckstring.empty?
+      raise ArgumentError.new('Invalid deckstring.')
     end
 
     stream = StringIO.new(Base64::decode64(deckstring))

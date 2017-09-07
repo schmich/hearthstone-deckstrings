@@ -1,6 +1,6 @@
 require 'test/unit'
 require 'deckstrings'
- 
+
 class TestDeckstrings < Test::Unit::TestCase
   def test_heroes
     assert_not_nil(Deckstrings::Hero.mage)
@@ -65,6 +65,15 @@ class TestDeckstrings < Test::Unit::TestCase
   def test_encode_zero_count
     assert_raise(ArgumentError) {
       Deckstrings::encode({ format: 0, heroes: [0], cards: { 0 => 0 } })
+    }
+  end
+
+  def test_decode_missing_deckstring
+    assert_raise(ArgumentError) {
+      Deckstrings::decode(nil)
+    }
+    assert_raise(ArgumentError) {
+      Deckstrings::decode('')
     }
   end
 

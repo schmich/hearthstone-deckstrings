@@ -2,7 +2,7 @@
 
 Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/).
 
-## Getting Started
+## Usage
 
 ```bash
 gem install deckstrings
@@ -12,33 +12,37 @@ gem install deckstrings
 require 'deckstrings'
 ```
 
+Hearthstone deckstrings encode a Hearthstone deck in a compact format.
+
+The IDs used in deckstrings and in this library refer to Hearthstone DBF IDs which uniquely define Hearthstone entities like cards and heroes.
+
+For additional entity metadata, the DBF IDs can be used in conjunction with the [HearthstoneJSON](https://hearthstonejson.com/) database.
+
 ## Decoding
 
-For the simplest decoding with the least validation, use `Deckstrings::decode`:
+`Deckstrings::decode` provides the simplest decoding with the least validation.
 
 ```ruby
 deckstring = 'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA='
 puts Deckstrings::decode(deckstring)
 ```
 
-Output:
-
 ```text
 {:format=>2, :heroes=>[274], :cards=>{754=>1, 1656=>1, 1657=>1, 38318=>1, 40416=>1, 40596=>1, 41929=>1, 43417=>1, 64=>2, 95=>2, 254=>2, 836=>2, 1124=>2, 40372=>2, 40523=>2, 40527=>2, 40797=>2, 42656=>2, 42759=>2}}
 ```
 
-For extended validation and additional information, use `Deckstrings::Deck.parse`:
+`Deckstrings::Deck.parse` provides extended validation and additional deck information including card name and cost.
 
 ```ruby
 deckstring = 'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA='
 puts Deckstrings::Deck.parse(deckstring)
 ```
 
-Output:
-
 ```text
 Format: Standard
-Hero: Malfurion Stormrage (Druid)
+Class: Druid
+Hero: Malfurion Stormrage
+
 2× Innervate
 2× Jade Idol
 2× Wild Growth

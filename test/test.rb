@@ -50,21 +50,56 @@ class TestDeckstrings < Test::Unit::TestCase
     assert_equal(deckstring, Deckstrings::encode(deck))
   end
 
+  def test_encode_decode
+    deckstring = 'AAECAR8GxwPJBLsFmQfZB/gIDI0B2AGoArUDhwSSBe0G6wfbCe0JgQr+DAA='
+    deck = { format: 2, heroes: [31], cards: { 455 => 1, 585 => 1, 699 => 1, 921 => 1, 985 => 1, 1144 => 1, 141 => 2, 216 => 2, 296 => 2, 437 => 2, 519 => 2, 658 => 2, 877 => 2, 1003 => 2, 1243 => 2, 1261 => 2, 1281 => 2, 1662 => 2 } }
+    assert_equal(deck, Deckstrings::decode(deckstring))
+    assert_equal(deckstring, Deckstrings::encode(deck))
+  end
+
+  def test_encode_format_enum
+    assert_equal(
+      Deckstrings::encode(format: 1, heroes: [], cards: {}),
+      Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
+    )
+  end
+
+  def test_encode_hero_object
+    assert_equal(
+      Deckstrings::encode(format: 0, heroes: [7], cards: {}),
+      Deckstrings::encode(format: 0, heroes: [Deckstrings::Hero.garrosh], cards: {})
+    )
+  end
+
+  def test_hero_sort
+    assert_equal(
+      Deckstrings::encode(format: 0, heroes: [0, 1], cards: {}),
+      Deckstrings::encode(format: 0, heroes: [1, 0], cards: {})
+    )
+  end
+
+  def test_card_sort
+    assert_equal(
+      Deckstrings::encode(format: 0, heroes: [], cards: { 0 => 1, 1 => 1 }),
+      Deckstrings::encode(format: 0, heroes: [], cards: { 1 => 1, 0 => 1 })
+    )
+  end
+
   def test_encode_missing_argument
     assert_raise(ArgumentError) {
-      Deckstrings::encode({ heroes: [0], cards: { 0 => 1 } })
+      Deckstrings::encode(heroes: [0], cards: { 0 => 1 })
     }
     assert_raise(ArgumentError) {
-      Deckstrings::encode({ format: 0, cards: { 0 => 1 } })
+      Deckstrings::encode(format: 0, cards: { 0 => 1 })
     }
     assert_raise(ArgumentError) {
-      Deckstrings::encode({ format: 0, heroes: [0] })
+      Deckstrings::encode(format: 0, heroes: [0])
     }
   end
 
   def test_encode_zero_count
     assert_raise(ArgumentError) {
-      Deckstrings::encode({ format: 0, heroes: [0], cards: { 0 => 0 } })
+      Deckstrings::encode(format: 0, heroes: [0], cards: { 0 => 0 })
     }
   end
 
@@ -77,10 +112,15 @@ class TestDeckstrings < Test::Unit::TestCase
     }
   end
 
-  def test_encode_decode
-    deckstring = 'AAECAR8GxwPJBLsFmQfZB/gIDI0B2AGoArUDhwSSBe0G6wfbCe0JgQr+DAA='
-    deck = { format: 2, heroes: [31], cards: { 455 => 1, 585 => 1, 699 => 1, 921 => 1, 985 => 1, 1144 => 1, 141 => 2, 216 => 2, 296 => 2, 437 => 2, 519 => 2, 658 => 2, 877 => 2, 1003 => 2, 1243 => 2, 1261 => 2, 1281 => 2, 1662 => 2 } }
-    assert_equal(deck, Deckstrings::decode(deckstring))
-    assert_equal(deckstring, Deckstrings::encode(deck))
+  def test_decode_invalid_reserved
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::decode('BB')
+    }
+  end
+
+  def test_decode_invalid_version
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::decode('AABB')
+    }
   end
 end

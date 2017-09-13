@@ -202,10 +202,14 @@ module Deckstrings
       end.sort_by { |card, _| card.cost }.to_h
     end
 
-    def deckstring
+    def raw
       heroes = @heroes.map(&:id)
       cards = @cards.map { |card, count| [card.id, count] }.to_h
-      return Deckstrings::encode(format: @format.value, heroes: heroes, cards: cards)
+      { format: @format.value, heroes: heroes, cards: cards }
+    end
+
+    def deckstring
+      return Deckstrings::encode(self.raw)
     end
 
     def self.parse(deckstring)
@@ -235,6 +239,9 @@ module Deckstrings
 
   def self.encode(format:, heroes:, cards:)
     stream = StringIO.new('')
+
+    format = format.is_a?(Deckstrings::Format) ? format.value : format
+    heroes = heroes.map { |hero| hero.is_a?(Deckstrings::Hero) ? hero.id : hero }
 
     # Reserved slot, version, and format.
     stream.write_varint(0)

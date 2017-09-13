@@ -227,7 +227,7 @@ module Deckstrings
 
     def to_s
       hero = @heroes.first
-      "Format: #{format}\nHero: #{hero.name} (#{hero.hero_class})\n" + cards.map do |card, count|
+      "Format: #{format}\nClass: #{hero.hero_class}\nHero: #{hero.name}\n\n" + cards.map do |card, count|
         "#{count}× #{card.name}"
       end.join("\n")
     end

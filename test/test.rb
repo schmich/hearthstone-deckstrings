@@ -83,6 +83,10 @@ class TestDeckstrings < Test::Unit::TestCase
       Deckstrings::encode(format: 0, heroes: [], cards: { 0 => 1, 1 => 1 }),
       Deckstrings::encode(format: 0, heroes: [], cards: { 1 => 1, 0 => 1 })
     )
+    assert_equal(
+      Deckstrings::encode(format: 0, heroes: [], cards: { 0 => 1, 1 => 1, 2 => 2, 3 => 2, 4 => 3 }),
+      Deckstrings::encode(format: 0, heroes: [], cards: { 3 => 2, 4 => 3, 1 => 1, 0 => 1, 2 => 2 })
+    )
   end
 
   def test_encode_missing_argument

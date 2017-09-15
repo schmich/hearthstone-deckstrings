@@ -127,4 +127,15 @@ class TestDeckstrings < Test::Unit::TestCase
       Deckstrings::decode('AABB')
     }
   end
+
+  def test_decode_unexpected_eof
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::decode('AAEB0')
+    }
+  end
+
+  def test_format_query
+    s = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
+    assert_true(Deckstrings::Deck.parse(s).wild?)
+  end
 end

@@ -429,47 +429,49 @@ module Deckstrings
   # @see Deck#parse
   # @see .encode
   def self.decode(deckstring)
-    # TODO: Translate EOFError -> FormatError.
+    begin
+      if deckstring.nil? || deckstring.empty?
+        raise ArgumentError.new('Invalid deckstring.')
+      end
 
-    if deckstring.nil? || deckstring.empty?
-      raise ArgumentError.new('Invalid deckstring.')
-    end
+      stream = StringIO.new(Base64::decode64(deckstring))
 
-    stream = StringIO.new(Base64::decode64(deckstring))
+      reserved = stream.read_varint
+      if reserved != 0
+        raise FormatError.new("Unexpected reserved byte: #{reserved}.")
+      end
 
-    reserved = stream.read_varint
-    if reserved != 0
-      raise FormatError.new("Unexpected reserved byte: #{reserved}.")
-    end
+      version = stream.read_varint
+      if version != 1
+        raise FormatError.new("Unexpected version: #{version}.")
+      end
 
-    version = stream.read_varint
-    if version != 1
-      raise FormatError.new("Unexpected version: #{version}.")
-    end
+      format = stream.read_varint
 
-    format = stream.read_varint
-
-    # Heroes
-    heroes = []
-    length = stream.read_varint
-    length.times do
-      heroes << stream.read_varint
-    end
-
-    # Cards
-    cards = {}
-    1.upto(3) do |i|
+      # Heroes
+      heroes = []
       length = stream.read_varint
       length.times do
-        card = stream.read_varint
-        cards[card] = i < 3 ? i : stream.read_varint
+        heroes << stream.read_varint
       end
-    end
 
-    return {
-      format: format,
-      heroes: heroes,
-      cards: cards
-    }
+      # Cards
+      cards = {}
+      1.upto(3) do |i|
+        length = stream.read_varint
+        length.times do
+          card = stream.read_varint
+          cards[card] = i < 3 ? i : stream.read_varint
+        end
+      end
+
+      return {
+        format: format,
+        heroes: heroes,
+        cards: cards
+      }
+    rescue EOFError
+      raise FormatError, 'Unexpected end of data.'
+    end
   end
 end

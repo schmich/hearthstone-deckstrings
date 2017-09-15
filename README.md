@@ -1,6 +1,6 @@
 # Hearthstone Deckstrings [![Gem Version](https://badge.fury.io/rb/deckstrings.svg)](http://rubygems.org/gems/deckstrings) [![Build Status](https://travis-ci.org/schmich/hearthstone-deckstrings.svg?branch=master)](https://travis-ci.org/schmich/hearthstone-deckstrings)
 
-Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/).
+Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/). See [documentation](http://www.rubydoc.info/gems/deckstrings) for help.
 
 ## Usage
 

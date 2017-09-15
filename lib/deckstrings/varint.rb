@@ -7,7 +7,7 @@ module Deckstrings
         shift = 0
         loop do
           octet = self.getbyte
-          raise EOFError.new('Unexpected end of data.') if octet.nil?
+          raise EOFError, 'Unexpected end of data.' if octet.nil?
 
           num |= (octet & 0x7f) << shift
           return num if octet & 0x80 == 0

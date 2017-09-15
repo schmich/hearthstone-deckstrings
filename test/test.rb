@@ -102,17 +102,23 @@ class TestDeckstrings < Test::Unit::TestCase
   end
 
   def test_encode_zero_count
-    assert_raise(ArgumentError) {
+    assert_raise(Deckstrings::FormatError) {
       Deckstrings::encode(format: 0, heroes: [0], cards: { 0 => 0 })
     }
   end
 
   def test_decode_missing_deckstring
-    assert_raise(ArgumentError) {
+    assert_raise(Deckstrings::FormatError) {
       Deckstrings::decode(nil)
     }
-    assert_raise(ArgumentError) {
+    assert_raise(Deckstrings::FormatError) {
       Deckstrings::decode('')
+    }
+  end
+
+  def test_decode_invalid_base64
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::decode("{}''\n\t @$%^&*()")
     }
   end
 

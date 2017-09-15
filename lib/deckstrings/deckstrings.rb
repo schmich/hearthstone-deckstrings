@@ -270,19 +270,17 @@ module Deckstrings
       # TODO: Translate RangeError -> FormatError.
 
       @format = Format.parse(format) if !format.is_a?(Format)
-      if !@format
-        raise FormatError.new("Unknown format: #{format}.")
-      end
+      raise FormatError, "Unknown format: #{format}." if !@format
 
       @heroes = heroes.map do |id|
         hero = Database.instance.heroes[id]
-        raise FormatError.new("Unknown hero: #{id}.") if hero.nil?
+        raise FormatError, "Unknown hero: #{id}." if hero.nil?
         Hero.new(id, hero['name'], hero['class'])
       end
 
       @cards = cards.map do |id, count|
         card = Database.instance.cards[id]
-        raise FormatError.new("Unknown card: #{id}.") if card.nil?
+        raise FormatError, "Unknown card: #{id}." if card.nil?
         [Card.new(id, card['name'], card['cost']), count]
       end.sort_by { |card, _| card.cost }.to_h
     end
@@ -403,7 +401,7 @@ module Deckstrings
 
     invalid = by_count.keys.select { |count| count < 1 }
     unless invalid.empty?
-      raise ArgumentError.new("Invalid card count: #{invalid.join(', ')}.")
+      raise FormatError, "Invalid card count: #{invalid.join(', ')}."
     end
 
     1.upto(3) do |count|
@@ -431,23 +429,23 @@ module Deckstrings
   def self.decode(deckstring)
     begin
       if deckstring.nil? || deckstring.empty?
-        raise ArgumentError.new('Invalid deckstring.')
+        raise FormatError, 'Invalid deckstring.'
       end
 
       stream = begin
         StringIO.new(Base64::strict_decode64(deckstring))
       rescue ArgumentError
-        raise FormatError.new('Invalid base64-encoded string.')
+        raise FormatError, 'Invalid base64-encoded string.'
       end
 
       reserved = stream.read_varint
       if reserved != 0
-        raise FormatError.new("Unexpected reserved byte: #{reserved}.")
+        raise FormatError, "Unexpected reserved byte: #{reserved}."
       end
 
       version = stream.read_varint
       if version != 1
-        raise FormatError.new("Unexpected version: #{version}.")
+        raise FormatError, "Unexpected version: #{version}."
       end
 
       format = stream.read_varint

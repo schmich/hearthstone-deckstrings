@@ -4,6 +4,9 @@ gem: lib/deckstrings/database.json
 doc:
 	rm -rf doc && yard server --reload
 
+irb:
+	irb -Ilib -rdeckstrings
+
 test:
 	ruby -Ilib test/test.rb
 
@@ -16,4 +19,4 @@ test-gem: gem
 lib/deckstrings/database.json:
 	ruby make-database.rb > lib/deckstrings/database.json	
 
-.PHONY: test gem doc test-gem
+.PHONY: test gem doc irb test-gem

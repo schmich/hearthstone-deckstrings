@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/schmich/hearthstone-deckstrings'
   s.license = 'MIT'
   s.required_ruby_version = '>= 2.1.0'
+  s.add_development_dependency 'yard', '~> 0.9'
 end

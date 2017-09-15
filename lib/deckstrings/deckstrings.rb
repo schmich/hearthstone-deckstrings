@@ -21,6 +21,7 @@ module Deckstrings
     define :standard, 2, 'Standard'
   end
 
+  # Enumeration of all nine Hearthstone classes.
   class HeroClass
     include Enum
 
@@ -92,6 +93,7 @@ module Deckstrings
       @id = id
       @name = name
       @hero_class = HeroClass.parse(hero_class)
+      raise ArgumentError, "Invalid hero class: #{hero_class}." if @hero_class.nil?
     end
 
     # @return [Hero] Jaina Proudmoore.
@@ -366,12 +368,12 @@ module Deckstrings
 
   # Encodes a Hearthstone deck as a compact deckstring.
   # @example
-  #   Deckstrings.encode(format: 2, heroes: [7], cards: { 44 => 1, 45 => 2 })
+  #   Deckstrings.encode(format: 2, heroes: [637], cards: { 1004 => 2, 315 => 2 })
   # @example
   #   Deckstrings.encode(
   #     format: Deckstrings::Format.standard,
-  #     heroes: [Deckstrings::Hero.warrior],
-  #     cards: { 1 => 2, 2 => 2 }
+  #     heroes: [Deckstrings::Hero.mage],
+  #     cards: { 1004 => 2, 315 => 2 }
   #   )
   # @param format [Integer, Deckstrings::Format] Format for this deck: wild or standard.
   # @param heroes [Array<Integer, Deckstrings::Hero>] Heroes for this deck. Multiple heroes are supported, but typically
@@ -418,7 +420,7 @@ module Deckstrings
     Base64::strict_encode64(stream.string).strip
   end
 
-  # Decodes a Hearthstone deckstring into format, hero, and card details.
+  # Decodes a Hearthstone deckstring into format, hero, and card counts.
   # @example
   #   deck = Deckstrings::decode('AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A')
   # @example
@@ -429,17 +431,17 @@ module Deckstrings
   # @see Deck#parse
   # @see .encode
   def self.decode(deckstring)
+    if deckstring.nil? || deckstring.empty?
+      raise FormatError, 'Invalid deckstring.'
+    end
+
+    stream = begin
+      StringIO.new(Base64::strict_decode64(deckstring))
+    rescue ArgumentError
+      raise FormatError, 'Invalid base64-encoded string.'
+    end
+
     begin
-      if deckstring.nil? || deckstring.empty?
-        raise FormatError, 'Invalid deckstring.'
-      end
-
-      stream = begin
-        StringIO.new(Base64::strict_decode64(deckstring))
-      rescue ArgumentError
-        raise FormatError, 'Invalid base64-encoded string.'
-      end
-
       reserved = stream.read_varint
       if reserved != 0
         raise FormatError, "Unexpected reserved byte: #{reserved}."
@@ -468,14 +470,14 @@ module Deckstrings
           cards[card] = i < 3 ? i : stream.read_varint
         end
       end
-
-      return {
-        format: format,
-        heroes: heroes,
-        cards: cards
-      }
     rescue EOFError
       raise FormatError, 'Unexpected end of data.'
     end
+
+    return {
+      format: format,
+      heroes: heroes,
+      cards: cards
+    }
   end
 end

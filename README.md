@@ -1,4 +1,4 @@
-# Hearthstone Deckstrings
+# Hearthstone Deckstrings [![Gem Version](https://badge.fury.io/rb/deckstrings.svg)](http://rubygems.org/gems/deckstrings) [![Build Status](https://travis-ci.org/schmich/hearthstone-deckstrings.svg?branch=master)](https://travis-ci.org/schmich/hearthstone-deckstrings)
 
 Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/).
 
@@ -16,7 +16,7 @@ Hearthstone deckstrings encode a Hearthstone deck in a compact format.
 
 The IDs used in deckstrings and in this library refer to Hearthstone DBF IDs which uniquely define Hearthstone entities like cards and heroes.
 
-For additional entity metadata, the DBF IDs can be used in conjunction with the [HearthstoneJSON](https://hearthstonejson.com/) database.
+For additional entity metadata (e.g. hero class, card cost, card name), the DBF IDs can be used in conjunction with the [HearthstoneJSON](https://hearthstonejson.com/) database.
 
 ## Decoding
 
@@ -66,6 +66,9 @@ Hero: Malfurion Stormrage
 
 ## Encoding
 
+`Deckstrings::encode`
+
+`Deckstrings::Deck`
 
 ## License
 

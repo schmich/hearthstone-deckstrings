@@ -141,15 +141,25 @@ class TestDeckstrings < Test::Unit::TestCase
   end
 
   def test_format_query
-    s = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
-    assert_equal(true, Deckstrings::Deck.parse(s).wild?)
+    wild = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
+    assert_equal(true, Deckstrings::Deck.parse(wild).wild?)
+    standard = Deckstrings::encode(format: Deckstrings::Format.standard, heroes: [], cards: {})
+    assert_equal(true, Deckstrings::Deck.parse(standard).standard?)
   end
 
-  def test_deck_parse_invalid_format
-    #Deckstrings::Deck.new(format: 3, heroes: [], cards: {})
+  def test_deck_invalid_argument
+    assert_raise(ArgumentError) {
+      Deckstrings::Deck.new(format: 10, heroes: [], cards: {})
+    }
+    assert_raise(ArgumentError) {
+      Deckstrings::Deck.new(format: 1, heroes: [-1], cards: {})
+    }
+    assert_raise(ArgumentError) {
+      Deckstrings::Deck.new(format: 1, heroes: [], cards: { -1 => 1 })
+    }
   end
 
-  def test_various_deckstrings
+  def test_deckstrings
     deckstrings = [
       'AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A',
       'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=',

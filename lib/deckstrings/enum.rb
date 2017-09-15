@@ -18,9 +18,7 @@ module Deckstrings
       end
 
       def parse(value)
-        enum = @@values[value]
-        raise RangeError, "Unknown value: #{value}." if !enum
-        enum
+        @@values[value]
       end
     end
 

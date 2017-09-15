@@ -267,20 +267,18 @@ module Deckstrings
   # @see Deck#deckstring
   class Deck
     def initialize(format:, heroes:, cards:)
-      # TODO: Translate RangeError -> FormatError.
-
       @format = Format.parse(format) if !format.is_a?(Format)
-      raise FormatError, "Unknown format: #{format}." if !@format
+      raise ArgumentError, "Unknown format: #{format}." if !@format
 
       @heroes = heroes.map do |id|
         hero = Database.instance.heroes[id]
-        raise FormatError, "Unknown hero: #{id}." if hero.nil?
+        raise ArgumentError, "Unknown hero: #{id}." if hero.nil?
         Hero.new(id, hero['name'], hero['class'])
       end
 
       @cards = cards.map do |id, count|
         card = Database.instance.cards[id]
-        raise FormatError, "Unknown card: #{id}." if card.nil?
+        raise ArgumentError, "Unknown card: #{id}." if card.nil?
         [Card.new(id, card['name'], card['cost']), count]
       end.sort_by { |card, _| card.cost }.to_h
     end
@@ -303,7 +301,11 @@ module Deckstrings
     # @see #deckstring
     def self.parse(deckstring)
       parts = Deckstrings::decode(deckstring)
-      Deck.new(parts)
+      begin
+        Deck.new(parts)
+      rescue ArgumentError => e
+        raise FormatError, e.to_s
+      end
     end
 
     # @return [Boolean] `true` if the deck is Wild format, `false` otherwise.

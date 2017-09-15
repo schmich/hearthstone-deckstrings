@@ -7,7 +7,13 @@ doc:
 test:
 	ruby -Ilib test/test.rb
 
+test-gem: gem
+	rm -rf /tmp/deckstrings && mkdir /tmp/deckstrings
+	cp *.gem /tmp/deckstrings
+	(cd /tmp/deckstrings && tar xf *.gem && tar zxf data.tar.gz)
+	ruby -I/tmp/deckstrings/lib test/test.rb
+
 lib/deckstrings/database.json:
 	ruby make-database.rb > lib/deckstrings/database.json	
 
-.PHONY: test gem doc
+.PHONY: test gem doc test-gem

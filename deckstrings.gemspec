@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = 'Ruby library for encoding and decoding Hearthstone deckstrings.'
   s.authors = ['Chris Schmich']
   s.email = 'schmch@gmail.com'
-  s.files = Dir['{lib}/**/*.rb', '{lib}/**/*.json', '*.md', 'LICENSE']
+  s.files = Dir['{lib}/**/*.rb', '{lib}/**/*.json', 'README.md', 'LICENSE', '.yardopts']
   s.require_path = 'lib'
   s.homepage = 'https://github.com/schmich/hearthstone-deckstrings'
   s.license = 'MIT'

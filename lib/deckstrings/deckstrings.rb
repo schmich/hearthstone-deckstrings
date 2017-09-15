@@ -415,7 +415,7 @@ module Deckstrings
       end
     end
 
-    Base64::encode64(stream.string).strip
+    Base64::strict_encode64(stream.string).strip
   end
 
   # Decodes a Hearthstone deckstring into format, hero, and card details.
@@ -434,7 +434,11 @@ module Deckstrings
         raise ArgumentError.new('Invalid deckstring.')
       end
 
-      stream = StringIO.new(Base64::decode64(deckstring))
+      stream = begin
+        StringIO.new(Base64::strict_decode64(deckstring))
+      rescue ArgumentError
+        raise FormatError.new('Invalid base64-encoded string.')
+      end
 
       reserved = stream.read_varint
       if reserved != 0

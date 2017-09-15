@@ -138,4 +138,45 @@ class TestDeckstrings < Test::Unit::TestCase
     s = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
     assert_equal(true, Deckstrings::Deck.parse(s).wild?)
   end
+
+  def test_deck_parse_invalid_format
+    #Deckstrings::Deck.new(format: 3, heroes: [], cards: {})
+  end
+
+  def test_various_deckstrings
+    deckstrings = [
+      'AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A',
+      'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=',
+      'AAECAaIHCLIC7QLdCJG8Asm/ApTQApziAp7iAgu0AagF1AXcrwKStgKBwgKbwgLrwgLKywKmzgKnzgIA',
+      'AAECAR8E8gXtCZG8AobTAg2oArUD5QfrB5cIxQj+DLm0Auq7AuTCAo7DAtPNAtfNAgA=',
+      'AAECAQcES+0FoM4Cn9MCDZAD/ASRBvgH/weyCPsMxsMC38QCzM0Cjs4Cns4C8dMCAA==',
+      'AAECAf0GHjCKAZMB9wTtBfIF2waSB7YH4Qf7B40IxAjMCPMM2LsC2bwC3bwCysMC3sQC38QC08UC58sCos0C980Cn84CoM4Cws4Cl9MCl+gCAAA=',
+      'AAECAZ8FDPIF9QX6Bo8JvL0C/70CucEC78ICps4Cws4CnOIC0OICCdmuArO7ApW8ApvCAsrDAuPLAqfOAvfQApboAgA=',
+      'AAECAZICCEDyBfkMrqsC4LsClL0Cz8cCmdMCC1+KAf4B3gXEBuQIvq4CtLsCy7wCoM0Ch84CAA==',
+      'AAEBAaIHCLIC9gTUBe0FpAeQEJG8AoHCAgu0AcsDzQObBbkGiAfdCIYJrxDEFpK2AgA=',
+      'AAEBAZ8FCqcF4AX6BusPnhCEF9muArq9AuO+ArnBAgrbA6cI6g/TqgLTvAKzwQKdwgKxwgKIxwLjywIA',
+      'AAEBAf0EArgI1hEOigHAAZwCyQOrBMsE5gTtBJYF+Af3DZjEAtrFArnRAgA=',
+      'AAEBAa0GBgm0A5IPtxeoqwKFuAIMlwKhBNMK1wr6EaGsAui/AtHBAuXMAubMArTOAvDPAgA=',
+      'AAEBAf0GCLYH+g7CD/UP8BHdvAL3zQKX0wILigGTAdMB4QeNCNwKjg6tEN4Wqa0C58sCAA==',
+      'AAEBAZICCrQDxQTtBbkGig7WEegV7BWuqwLguwIKQF/+AdMDxAbkCJdovq4CoM0Ch84CAA==',
+      'AAEBAQcG+QzVEbAVxsMCoM4C9s8CDEuRA9QEkQb4B/8H+wzkD4KtAszNAo7OAvHTAgA=',
+      'AAEBAR8C/gyG0wIO0wG1A4cEgAfhB5cIxQjcCvcNuRHUEcsU3hbTzQIA',
+      'AAECAR8CuwXFCA6oArUD6weXCNsJ7QmBCv4Mzq4C6rsC5MICjsMC080Cps4CAA==',
+      'AAECAaoIBNAHiq0C9r0Cm8ICDVrvAYECgQT+BfAHkwn3qgL6qgL1rALDtAKuvAL5vwIA',
+      'AAECAf0GBPcEoQaxCMUJDTDcAvUF+wXZB8IIxAi0rAL2rgLnwQKrwgLrwgKVzgIA',
+      'AAECAZICCNUB/gHTAosE+wTjBdoK+QoLKUBa2AGBAqECtALgBOYFngnZCgA=',
+      'AAECAQcAAZEDAA==',
+      'AAECAf0EBk20AvEFigfsB5YNDCla2AG7AoUDiwOrBLQElgWABrwI2QoA',
+      'AAECAZ8FAkaeCQ6EAfoBgQKhAoUDvQPcA+4EiAXjBc8GrwfQB/UMAA==',
+      'AAEBAa0GAA/lBJ0GyQalCdIK0wrXCvIM8wyFEJYUiq0C7K4C0sECm8ICAA=='
+    ]
+    deckstrings.each do |deckstring|
+      deck = Deckstrings::Deck.parse(deckstring)
+      decode = Deckstrings::decode(deckstring)
+      assert_equal(deck.raw, decode)
+      assert_equal(deckstring, Deckstrings::encode(deck.raw))
+      assert_equal(deckstring, Deckstrings::encode(decode))
+      assert_equal(deckstring, deck.deckstring)
+    end
+  end
 end

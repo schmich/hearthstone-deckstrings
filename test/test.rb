@@ -136,6 +136,6 @@ class TestDeckstrings < Test::Unit::TestCase
 
   def test_format_query
     s = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
-    assert_true(Deckstrings::Deck.parse(s).wild?)
+    assert_equal(true, Deckstrings::Deck.parse(s).wild?)
   end
 end

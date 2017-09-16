@@ -2,10 +2,8 @@ require 'base64'
 require 'json'
 
 module Deckstrings
+  # An error indicating a malformed deckstring.
   class FormatError < StandardError
-    def initialize(message)
-      super(message)
-    end
   end
 
   # Enumeration of valid format types: wild and standard.
@@ -268,6 +266,12 @@ module Deckstrings
   # @see Deck.decode
   # @see Deck.encode
   class Deck
+    # Create a new deck from component parts.
+    # @param format [Integer, Deckstrings::Format] Format for this deck: wild or standard.
+    # @param heroes [Array<Integer, Deckstrings::Hero>] Heroes for this deck. Multiple heroes are supported, but typically
+    #   this array will contain one element.
+    # @param cards [Hash{Integer, Deckstrings::Card => Integer}] Cards in the deck. A Hash from card ID to its instance count in the deck.
+    # @raise [ArgumentError] If format, heroes, or any cards are unknown.
     def initialize(format:, heroes:, cards:)
       @format = Format.parse(format) if !format.is_a?(Format)
       raise ArgumentError, "Unknown format: #{format}." if !@format
@@ -294,7 +298,9 @@ module Deckstrings
       { format: @format.value, heroes: heroes, cards: cards }
     end
 
+    # Encoded deckstring for this deck.
     # @return [String] Base64-encoded compact byte string representing the deck.
+    # @see Deckstrings.encode
     # @see .encode
     def deckstring
       return Deckstrings::encode(self.raw)
@@ -367,6 +373,7 @@ module Deckstrings
       format.standard?
     end
 
+    # Pretty-printed deck listing.
     # @example
     #   puts Deckstrings::Deck.decode('AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=')
     # @example
@@ -412,10 +419,12 @@ module Deckstrings
     # @return [Format] Format for this deck.
     attr_reader :format
 
-    # @return [Array<Hero>] Heroes associated with this deck. Typically, this array will contain one element.
+    # The heroes associated with this deck.
+    # @return [Array<Hero>] Typically, this array will contain one element.
     attr_reader :heroes
 
-    # @return [Hash{Card => Integer}] The cards contained in this deck. A Hash from {Card} to its instance count in the deck.
+    # The cards contained in this deck.
+    # @return [Hash{Card => Integer}] A Hash from {Card} to its instance count in the deck.
     attr_reader :cards
   end
 

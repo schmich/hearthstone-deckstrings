@@ -3,32 +3,39 @@ require 'deckstrings'
 
 class TestDeckstrings < Test::Unit::TestCase
   def test_heroes
-    assert_not_nil(Deckstrings::Hero.mage)
-    assert_not_nil(Deckstrings::Hero.jaina)
-    assert_not_nil(Deckstrings::Hero.khadgar)
-    assert_not_nil(Deckstrings::Hero.rogue)
-    assert_not_nil(Deckstrings::Hero.valeera)
-    assert_not_nil(Deckstrings::Hero.maiev)
-    assert_not_nil(Deckstrings::Hero.druid)
-    assert_not_nil(Deckstrings::Hero.malfurion)
-    assert_not_nil(Deckstrings::Hero.shaman)
-    assert_not_nil(Deckstrings::Hero.thrall)
-    assert_not_nil(Deckstrings::Hero.morgl)
-    assert_not_nil(Deckstrings::Hero.priest)
-    assert_not_nil(Deckstrings::Hero.anduin)
-    assert_not_nil(Deckstrings::Hero.tyrande)
-    assert_not_nil(Deckstrings::Hero.hunter)
-    assert_not_nil(Deckstrings::Hero.rexxar)
-    assert_not_nil(Deckstrings::Hero.alleria)
-    assert_not_nil(Deckstrings::Hero.warlock)
-    assert_not_nil(Deckstrings::Hero.guldan)
-    assert_not_nil(Deckstrings::Hero.paladin)
-    assert_not_nil(Deckstrings::Hero.uther)
-    assert_not_nil(Deckstrings::Hero.liadrin)
-    assert_not_nil(Deckstrings::Hero.arthas)
-    assert_not_nil(Deckstrings::Hero.warrior)
-    assert_not_nil(Deckstrings::Hero.garrosh)
-    assert_not_nil(Deckstrings::Hero.magni)
+    heroes = [
+      Deckstrings::Hero.mage,
+      Deckstrings::Hero.jaina,
+      Deckstrings::Hero.khadgar,
+      Deckstrings::Hero.rogue,
+      Deckstrings::Hero.valeera,
+      Deckstrings::Hero.maiev,
+      Deckstrings::Hero.druid,
+      Deckstrings::Hero.malfurion,
+      Deckstrings::Hero.shaman,
+      Deckstrings::Hero.thrall,
+      Deckstrings::Hero.morgl,
+      Deckstrings::Hero.priest,
+      Deckstrings::Hero.anduin,
+      Deckstrings::Hero.tyrande,
+      Deckstrings::Hero.hunter,
+      Deckstrings::Hero.rexxar,
+      Deckstrings::Hero.alleria,
+      Deckstrings::Hero.warlock,
+      Deckstrings::Hero.guldan,
+      Deckstrings::Hero.paladin,
+      Deckstrings::Hero.uther,
+      Deckstrings::Hero.liadrin,
+      Deckstrings::Hero.arthas,
+      Deckstrings::Hero.warrior,
+      Deckstrings::Hero.garrosh,
+      Deckstrings::Hero.magni
+    ]
+    heroes.each do |hero|
+      assert_not_nil(hero)
+      parts = Deckstrings::decode(Deckstrings::encode(format: 0, heroes: [hero], cards: {}))
+      assert_equal(hero.id, parts[:heroes].first)
+    end
   end
 
   def test_hero

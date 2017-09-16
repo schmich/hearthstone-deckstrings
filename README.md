@@ -20,7 +20,7 @@ For additional entity metadata (e.g. hero class, card cost, card name), the DBF 
 
 ## Decoding
 
-[`Deckstrings::decode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings#decode-class_method) provides the simplest decoding with the least validation.
+[`Deckstrings::decode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings#decode-class_method) decodes a deckstring with basic validation.
 
 ```ruby
 deckstring = 'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA='
@@ -31,7 +31,7 @@ puts Deckstrings::decode(deckstring)
 {:format=>2, :heroes=>[274], :cards=>{754=>1, 1656=>1, 1657=>1, 38318=>1, 40416=>1, 40596=>1, 41929=>1, 43417=>1, 64=>2, 95=>2, 254=>2, 836=>2, 1124=>2, 40372=>2, 40523=>2, 40527=>2, 40797=>2, 42656=>2, 42759=>2}}
 ```
 
-[`Deckstrings::Deck.decode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#decode-class_method) provides extended validation and additional deck information including card name and cost.
+[`Deckstrings::Deck.decode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#decode-class_method) decodes a deckstring with extended validation and additional deck information including card names and costs.
 
 ```ruby
 deckstring = 'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA='
@@ -66,9 +66,73 @@ Hero: Malfurion Stormrage
 
 ## Encoding
 
-[`Deckstrings::encode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings#encode-class_method)
+[`Deckstrings::encode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings#encode-class_method) encodes deck information in a deckstring with basic validation.
 
-[`Deckstrings::Deck.new`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#initialize-instance_method)
+```ruby
+puts Deckstrings::encode(
+  format: Deckstrings::Format.standard,
+  heroes: [Deckstrings::Hero.malfurion],
+  cards: {
+    254 => 2,
+    40372 => 2,
+    1124 => 2,
+    836 => 2,
+    40523 => 2,
+    64 => 2,
+    40527 => 2,
+    38318 => 1,
+    754 => 1,
+    95 => 2,
+    1657 => 1,
+    42656 => 2,
+    1656 => 1,
+    40596 => 1,
+    40797 => 2,
+    43417 => 1,
+    41929 => 1,
+    42759 => 2,
+    40416 => 1    
+  }
+)
+```
+
+```text
+AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=
+```
+
+[`Deckstrings::Deck.encode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#encode-class_method) encodes deck information in a deckstring with extended validation.
+
+```ruby
+puts Deckstrings::Deck.encode(
+  format: 2,
+  heroes: [274],
+  cards: {
+    254 => 2,
+    40372 => 2,
+    1124 => 2,
+    836 => 2,
+    40523 => 2,
+    64 => 2,
+    40527 => 2,
+    38318 => 1,
+    754 => 1,
+    95 => 2,
+    1657 => 1,
+    42656 => 2,
+    1656 => 1,
+    40596 => 1,
+    40797 => 2,
+    43417 => 1,
+    41929 => 1,
+    42759 => 2,
+    40416 => 1    
+  }
+)
+```
+
+```text
+AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=
+```
 
 ## License
 

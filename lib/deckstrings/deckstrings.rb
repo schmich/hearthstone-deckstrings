@@ -233,8 +233,8 @@ module Deckstrings
       Hero.new(id, hero['name'], hero['class'])
     end
 
-    # @see https://hearthstonejson.com/ HearthstoneJSON for hero metadata.
     # @return [Integer] Hearthstone DBF ID of the hero.
+    # @see https://hearthstonejson.com/ HearthstoneJSON
     attr_reader :id
 
     # @return [String] Name of the hero.
@@ -245,7 +245,7 @@ module Deckstrings
   end
 
   # A Hearthstone card with basic metadata.
-  # @see Deck.parse
+  # @see Deck.decode
   class Card
     def initialize(id, name, cost)
       @id = id
@@ -253,8 +253,8 @@ module Deckstrings
       @cost = cost
     end
 
-    # @see https://hearthstonejson.com/ HearthstoneJSON for card metadata.
     # @return [Integer] Hearthstone DBF ID of the card.
+    # @see https://hearthstonejson.com/ HearthstoneJSON
     attr_reader :id
 
     # @return [String] Name of the card.
@@ -265,8 +265,8 @@ module Deckstrings
   end
 
   # A Hearthstone deck convertible to and from a deckstring.
-  # @see Deck.parse
-  # @see Deck#deckstring
+  # @see Deck.decode
+  # @see Deck.encode
   class Deck
     def initialize(format:, heroes:, cards:)
       @format = Format.parse(format) if !format.is_a?(Format)
@@ -299,12 +299,56 @@ module Deckstrings
       return Deckstrings::encode(self.raw)
     end
 
-    # @see .decode
-    # @see #deckstring
-    def self.parse(deckstring)
+    # Decodes a Hearthstone deckstring into a {Deck} with basic hero and card metadata.
+    #
+    # This method validates the well-formedness of the deckstring, the embedded version, the format, card counts, and
+    # each hero/card ID.
+    #
+    # All IDs refer to unique Hearthstone DBF IDs which can be used in conjunction with [HearthstoneJSON metadata](https://hearthstonejson.com/).
+    # @example
+    #   deck = Deckstrings::Deck.decode('AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A')
+    # @example
+    #   deck = Deckstrings::Deck.decode('AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=')
+    # @param deckstring [String] Base64-encoded Hearthstone deckstring.
+    # @raise [FormatError] If the deckstring is malformed or contains invalid deck data.
+    # @return [Deck] Decoded Hearthstone deck.
+    # @see Deckstrings.decode
+    # @see Deck.encode
+    # @see https://hearthstonejson.com/ HearthstoneJSON
+    def self.decode(deckstring)
       parts = Deckstrings::decode(deckstring)
       begin
         Deck.new(parts)
+      rescue ArgumentError => e
+        raise FormatError, e.to_s
+      end
+    end
+
+    # Encodes a Hearthstone deck as a compact deckstring.
+    #
+    # This method validates card counts, format, and each hero/card ID.
+    #
+    # All IDs refer to unique Hearthstone DBF IDs which can be seen in [HearthstoneJSON metadata](https://hearthstonejson.com/).
+    # @example
+    #   deckstring = Deckstrings::Deck.encode(format: 2, heroes: [637], cards: { 1004 => 2, 315 => 2 })
+    # @example
+    #   deckstring = Deckstrings::Deck.encode(
+    #     format: Deckstrings::Format.standard,
+    #     heroes: [Deckstrings::Hero.mage],
+    #     cards: { 1004 => 2, 315 => 2 }
+    #   )
+    # @param format [Integer, Deckstrings::Format] Format for this deck: wild or standard.
+    # @param heroes [Array<Integer, Deckstrings::Hero>] Heroes for this deck. Multiple heroes are supported, but typically
+    #   this array will contain one element.
+    # @param cards [Hash{Integer, Deckstrings::Card => Integer}] Cards in the deck. A Hash from card ID to its instance count in the deck.
+    # @raise [FormatError] If any card counts are less than 1, or if any IDs do not refer to valid Hearthstone entities.
+    # @return [String] Base64-encoded compact byte string representing the deck.
+    # @see .encode
+    # @see Deck.decode
+    # @see https://hearthstonejson.com/ HearthstoneJSON
+    def self.encode(format:, heroes:, cards:)
+      begin
+        Deck.new(format: format, heroes: heroes, cards: cards).deckstring
       rescue ArgumentError => e
         raise FormatError, e.to_s
       end
@@ -360,17 +404,22 @@ module Deckstrings
     # @return [Array<Hero>] Heroes associated with this deck. Typically, this array will contain one element.
     attr_reader :heroes
 
-    # @return [Hash{Card => Integer}] The cards contained in the deck. A map between {Card} and the instance count in the deck.
+    # @return [Hash{Card => Integer}] The cards contained in the deck. A Hash from {Card} to its instance count in the deck.
     attr_reader :cards
   end
 
   using VarIntExtensions
 
   # Encodes a Hearthstone deck as a compact deckstring.
+  #
+  # This method validates card counts, but does not validate the format or individual hero/card IDs. For stricter validation,
+  # see {Deck.encode}.
+  #
+  # All IDs refer to unique Hearthstone DBF IDs which can be seen in [HearthstoneJSON metadata](https://hearthstonejson.com/).
   # @example
-  #   Deckstrings.encode(format: 2, heroes: [637], cards: { 1004 => 2, 315 => 2 })
+  #   deckstring = Deckstrings::encode(format: 2, heroes: [637], cards: { 1004 => 2, 315 => 2 })
   # @example
-  #   Deckstrings.encode(
+  #   deckstring = Deckstrings::encode(
   #     format: Deckstrings::Format.standard,
   #     heroes: [Deckstrings::Hero.mage],
   #     cards: { 1004 => 2, 315 => 2 }
@@ -378,11 +427,12 @@ module Deckstrings
   # @param format [Integer, Deckstrings::Format] Format for this deck: wild or standard.
   # @param heroes [Array<Integer, Deckstrings::Hero>] Heroes for this deck. Multiple heroes are supported, but typically
   #   this array will contain one element.
-  # @param cards [Hash{Integer, Deckstrings::Card => Integer}] Cards in the deck.
-  # @raise [ArgumentError] If any card counts are less than 1.
+  # @param cards [Hash{Integer, Deckstrings::Card => Integer}] Cards in the deck. A Hash from card ID to its instance count in the deck.
+  # @raise [FormatError] If any card counts are less than 1.
   # @return [String] Base64-encoded compact byte string representing the deck.
-  # @see Deck#deckstring
+  # @see Deck.encode
   # @see .decode
+  # @see https://hearthstonejson.com/ HearthstoneJSON
   def self.encode(format:, heroes:, cards:)
     stream = StringIO.new('')
 
@@ -421,6 +471,11 @@ module Deckstrings
   end
 
   # Decodes a Hearthstone deckstring into format, hero, and card counts.
+  #
+  # This method validates the well-formedness of the deckstring and the embedded version, but does not validate
+  # the format, individual hero/card IDs, or card counts. For stricter validation and additional deck info, see {Deck.decode}.
+  #
+  # All IDs refer to unique Hearthstone DBF IDs which can be used in conjunction with [HearthstoneJSON metadata](https://hearthstonejson.com/).
   # @example
   #   deck = Deckstrings::decode('AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A')
   # @example
@@ -428,8 +483,11 @@ module Deckstrings
   # @param deckstring [String] Base64-encoded Hearthstone deckstring.
   # @raise [FormatError] If the deckstring is malformed or contains invalid deck data.
   # @return [{ format: Integer, heroes: Array<Integer>, cards: Hash{Integer => Integer} }] Parsed Hearthstone deck details.
-  # @see Deck#parse
+  #   `heroes` is an array of hero IDs, but this will usually be just one element. `cards` is a
+  #   Hash from card ID to its instance count in the deck.
+  # @see Deck.decode
   # @see .encode
+  # @see https://hearthstonejson.com/ HearthstoneJSON
   def self.decode(deckstring)
     if deckstring.nil? || deckstring.empty?
       raise FormatError, 'Invalid deckstring.'

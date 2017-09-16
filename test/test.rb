@@ -101,9 +101,12 @@ class TestDeckstrings < Test::Unit::TestCase
     }
   end
 
-  def test_encode_zero_count
+  def test_encode_invalid_count
     assert_raise(Deckstrings::FormatError) {
-      Deckstrings::encode(format: 0, heroes: [0], cards: { 0 => 0 })
+      Deckstrings::encode(format: 0, heroes: [], cards: { 0 => 0 })
+    }
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::encode(format: 0, heroes: [], cards: { 0 => -5 })
     }
   end
 
@@ -142,9 +145,9 @@ class TestDeckstrings < Test::Unit::TestCase
 
   def test_format_query
     wild = Deckstrings::encode(format: Deckstrings::Format.wild, heroes: [], cards: {})
-    assert_equal(true, Deckstrings::Deck.parse(wild).wild?)
+    assert_equal(true, Deckstrings::Deck.decode(wild).wild?)
     standard = Deckstrings::encode(format: Deckstrings::Format.standard, heroes: [], cards: {})
-    assert_equal(true, Deckstrings::Deck.parse(standard).standard?)
+    assert_equal(true, Deckstrings::Deck.decode(standard).standard?)
   end
 
   def test_deck_invalid_argument
@@ -187,7 +190,7 @@ class TestDeckstrings < Test::Unit::TestCase
       'AAEBAa0GAA/lBJ0GyQalCdIK0wrXCvIM8wyFEJYUiq0C7K4C0sECm8ICAA=='
     ]
     deckstrings.each do |deckstring|
-      deck = Deckstrings::Deck.parse(deckstring)
+      deck = Deckstrings::Deck.decode(deckstring)
       decode = Deckstrings::decode(deckstring)
       assert_equal(deck.raw, decode)
       assert_equal(deckstring, Deckstrings::encode(deck.raw))

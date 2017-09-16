@@ -169,6 +169,18 @@ class TestDeckstrings < Test::Unit::TestCase
     }
   end
 
+  def test_deck_decode_invalid
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::Deck.decode(Deckstrings::encode({ format: 100, heroes: [], cards: {} }))
+    }
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::Deck.decode(Deckstrings::encode({ format: 1, heroes: [100], cards: {} }))
+    }
+    assert_raise(Deckstrings::FormatError) {
+      Deckstrings::Deck.decode(Deckstrings::encode({ format: 1, heroes: [], cards: { 9999999 => 1 } }))
+    }
+  end
+
   def test_deckstrings
     deckstrings = [
       'AAEBAf0GAA/yAaIC3ALgBPcE+wWKBs4H2QexCMII2Q31DfoN9g4A',

@@ -264,7 +264,7 @@ module Deckstrings
     attr_reader :cost
   end
 
-  # A Hearthstone deck convertible to and from a deckstring.
+  # A Hearthstone deck with metadata that is convertible to and from a deckstring.
   # @see Deck.decode
   # @see Deck.encode
   class Deck
@@ -285,8 +285,9 @@ module Deckstrings
       end.sort_by { |card, _| card.cost }.to_h
     end
 
-    # @see .encode
-    # @see .decode
+    # Raw deck details.
+    # @return [{ format: Integer, heroes: Array<Integer>, cards: Hash{Integer => Integer} }] See {Deckstrings.decode} for details.
+    # @see Deckstrings.decode
     def raw
       heroes = @heroes.map(&:id)
       cards = @cards.map { |card, count| [card.id, count] }.to_h
@@ -367,6 +368,8 @@ module Deckstrings
     end
 
     # @example
+    #   puts Deckstrings::Deck.decode('AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA=')
+    # @example
     #   Format: Standard
     #   Class: Druid
     #   Hero: Malfurion Stormrage
@@ -392,10 +395,18 @@ module Deckstrings
     #   1× Kun the Forgotten King
     # @return [String] A pretty-printed listing of deck details.
     def to_s
+      listing = "Format: #{format}"
+
       hero = @heroes.first
-      "Format: #{format}\nClass: #{hero.hero_class}\nHero: #{hero.name}\n\n" + cards.map do |card, count|
-        "#{count}× #{card.name}"
-      end.join("\n")
+      if hero
+        listing += "\nClass: #{hero.hero_class}\nHero: #{hero.name}"
+      end
+
+      if !cards.empty?
+        listing += "\n\n" + cards.map { |card, count| "#{count}× #{card.name}" }.join("\n")
+      end
+
+      listing
     end
 
     # @return [Format] Format for this deck.
@@ -404,7 +415,7 @@ module Deckstrings
     # @return [Array<Hero>] Heroes associated with this deck. Typically, this array will contain one element.
     attr_reader :heroes
 
-    # @return [Hash{Card => Integer}] The cards contained in the deck. A Hash from {Card} to its instance count in the deck.
+    # @return [Hash{Card => Integer}] The cards contained in this deck. A Hash from {Card} to its instance count in the deck.
     attr_reader :cards
   end
 

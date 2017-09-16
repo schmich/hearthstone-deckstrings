@@ -31,11 +31,11 @@ puts Deckstrings::decode(deckstring)
 {:format=>2, :heroes=>[274], :cards=>{754=>1, 1656=>1, 1657=>1, 38318=>1, 40416=>1, 40596=>1, 41929=>1, 43417=>1, 64=>2, 95=>2, 254=>2, 836=>2, 1124=>2, 40372=>2, 40523=>2, 40527=>2, 40797=>2, 42656=>2, 42759=>2}}
 ```
 
-[`Deckstrings::Deck.parse`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#parse-class_method) provides extended validation and additional deck information including card name and cost.
+[`Deckstrings::Deck.decode`](http://www.rubydoc.info/gems/deckstrings/Deckstrings/Deck#decode-class_method) provides extended validation and additional deck information including card name and cost.
 
 ```ruby
 deckstring = 'AAECAZICCPIF+Az5DK6rAuC7ApS9AsnHApnTAgtAX/4BxAbkCLS7Asu8As+8At2+AqDNAofOAgA='
-puts Deckstrings::Deck.parse(deckstring)
+puts Deckstrings::Deck.decode(deckstring)
 ```
 
 ```text

@@ -10,7 +10,7 @@ irb:
 test:
 	ruby -Ilib test/test.rb
 
-test-gem: gem
+gem-test: gem
 	rm -rf /tmp/deckstrings && mkdir /tmp/deckstrings
 	cp *.gem /tmp/deckstrings
 	(cd /tmp/deckstrings && tar xf *.gem && tar zxf data.tar.gz)

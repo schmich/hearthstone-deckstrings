@@ -23,6 +23,7 @@ class TestDeckstrings < Test::Unit::TestCase
       Deckstrings::Hero.alleria,
       Deckstrings::Hero.warlock,
       Deckstrings::Hero.guldan,
+      Deckstrings::Hero.nemsy,
       Deckstrings::Hero.paladin,
       Deckstrings::Hero.uther,
       Deckstrings::Hero.liadrin,

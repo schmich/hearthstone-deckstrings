@@ -189,6 +189,11 @@ module Deckstrings
       self.from_id(893)
     end
 
+    # @return [Hero] Nemsy Necrofizzle.
+    def self.nemsy
+      self.from_id(47817)
+    end
+
     # @return [Hero] Uther Lightbringer.
     def self.paladin
       self.uther

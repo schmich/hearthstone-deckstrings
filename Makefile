@@ -16,7 +16,11 @@ gem-test: gem
 	(cd /tmp/deckstrings && tar xf *.gem && tar zxf data.tar.gz)
 	ruby -I/tmp/deckstrings/lib test/test.rb
 
+database:
+	rm lib/deckstrings/database.json
+	ruby make-database.rb > lib/deckstrings/database.json	
+
 lib/deckstrings/database.json:
 	ruby make-database.rb > lib/deckstrings/database.json	
 
-.PHONY: test gem doc irb test-gem
+.PHONY: test gem doc irb gem-test database

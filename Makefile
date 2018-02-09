@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 gem: lib/deckstrings/database.json
 	gem build deckstrings.gemspec
 
@@ -19,6 +21,7 @@ gem-test: gem
 database:
 	rm lib/deckstrings/database.json
 	ruby make-database.rb > lib/deckstrings/database.json	
+	mvimdiff <(git show master:lib/deckstrings/database.json | jq -r .) <(cat lib/deckstrings/database.json | jq -r .)
 
 lib/deckstrings/database.json:
 	ruby make-database.rb > lib/deckstrings/database.json	

@@ -12,6 +12,7 @@ class TestDeckstrings < Test::Unit::TestCase
       Deckstrings::Hero.maiev,
       Deckstrings::Hero.druid,
       Deckstrings::Hero.malfurion,
+      Deckstrings::Hero.lunara,
       Deckstrings::Hero.shaman,
       Deckstrings::Hero.thrall,
       Deckstrings::Hero.morgl,
@@ -209,7 +210,8 @@ class TestDeckstrings < Test::Unit::TestCase
       'AAECAZ8FAkaeCQ6EAfoBgQKhAoUDvQPcA+4EiAXjBc8GrwfQB/UMAA==',
       'AAEBAa0GAA/lBJ0GyQalCdIK0wrXCvIM8wyFEJYUiq0C7K4C0sECm8ICAA==',
       'AAEBAQcI+AeyCPkM6A+wFYawAvHTAqTnAgtLnQKQA6IE1ASRBv8H+wyCrQLMzQKOzgIA',
-      'AAECAf0EBskDxQTcCum6AtDBAvbqAgzAAZUDqwSBsgKCtAKwvALBwQKYxALHxwLezQK50QLN6wIA'
+      'AAECAf0EBskDxQTcCum6AtDBAvbqAgzAAZUDqwSBsgKCtAKwvALBwQKYxALHxwLezQK50QLN6wIA',
+      'AAECAaoICO0Fsgb7DJPBAqvnAvPnAuDqAu/3AgvuAYEE9QT+BcfBAsnHApvLArbNAp7wAqbwAu/xAgA='
     ]
     deckstrings.each do |deckstring|
       deck = Deckstrings::Deck.decode(deckstring)

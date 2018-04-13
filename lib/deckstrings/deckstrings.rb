@@ -134,6 +134,11 @@ module Deckstrings
       self.from_id(274)
     end
 
+    # @return [Hero] Lunara.
+    def self.lunara
+      self.from_id(50484)
+    end
+
     # @return [Hero] Thrall.
     def self.shaman
       self.thrall

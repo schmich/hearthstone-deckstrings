@@ -199,6 +199,11 @@ module Deckstrings
       self.from_id(47817)
     end
 
+    # @return [Hero] Mecha-Jaraxxus.
+    def self.mecha_jaraxxus
+      self.from_id(51834)
+    end
+
     # @return [Hero] Uther Lightbringer.
     def self.paladin
       self.uther

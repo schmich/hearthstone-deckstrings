@@ -25,6 +25,7 @@ class TestDeckstrings < Test::Unit::TestCase
       Deckstrings::Hero.warlock,
       Deckstrings::Hero.guldan,
       Deckstrings::Hero.nemsy,
+      Deckstrings::Hero.mecha_jaraxxus,
       Deckstrings::Hero.paladin,
       Deckstrings::Hero.uther,
       Deckstrings::Hero.liadrin,
@@ -211,7 +212,8 @@ class TestDeckstrings < Test::Unit::TestCase
       'AAEBAa0GAA/lBJ0GyQalCdIK0wrXCvIM8wyFEJYUiq0C7K4C0sECm8ICAA==',
       'AAEBAQcI+AeyCPkM6A+wFYawAvHTAqTnAgtLnQKQA6IE1ASRBv8H+wyCrQLMzQKOzgIA',
       'AAECAf0EBskDxQTcCum6AtDBAvbqAgzAAZUDqwSBsgKCtAKwvALBwQKYxALHxwLezQK50QLN6wIA',
-      'AAECAaoICO0Fsgb7DJPBAqvnAvPnAuDqAu/3AgvuAYEE9QT+BcfBAsnHApvLArbNAp7wAqbwAu/xAgA='
+      'AAECAaoICO0Fsgb7DJPBAqvnAvPnAuDqAu/3AgvuAYEE9QT+BcfBAsnHApvLArbNAp7wAqbwAu/xAgA=',
+      'AAECAf0EBE1x7/EC74ADDbsClQOrBLQE5gSWBewFwcECj9MC++wC6vYClf8Cuf8CAA=='
     ]
     deckstrings.each do |deckstring|
       deck = Deckstrings::Deck.decode(deckstring)

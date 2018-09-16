@@ -20,7 +20,6 @@ module Deckstrings
         loop do
           octet = num & 0x7f
           if (num >>= 7) > 0
-            octet |= 0x80
             octets << (octet | 0x80)
           else
             octets << octet

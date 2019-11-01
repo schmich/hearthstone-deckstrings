@@ -1,3 +1,7 @@
+# Archival Notice
+
+**Due directly to the decisions and actions of Blizzard Entertainment, Inc., I will no longer be maintaining this project. The community is free to fork and continue it, but I do not wish to be involved.**
+
 # Hearthstone Deckstrings [![Gem Version](https://badge.fury.io/rb/deckstrings.svg)](http://rubygems.org/gems/deckstrings) [![Build Status](https://travis-ci.org/schmich/hearthstone-deckstrings.svg?branch=master)](https://travis-ci.org/schmich/hearthstone-deckstrings)
 
 Ruby library for encoding and decoding [Hearthstone deckstrings](https://hearthsim.info/docs/deckstrings/). See [documentation](http://www.rubydoc.info/github/schmich/hearthstone-deckstrings) for help.
